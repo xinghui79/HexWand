@@ -23,9 +23,6 @@ config.json
 # ---- 由 preview.py 生成 ----
 screenshots/
 
-# ---- 源素材 / 设计稿（约定：assets/ 只放运行时会读的文件）----
-mascot_set/
-
 # ---- 本地协作数据 ----
 .workbuddy/
 
