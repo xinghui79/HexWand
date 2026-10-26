@@ -1,0 +1,35 @@
+# ---- Python 运行环境与缓存 ----
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+pip_install.log
+
+# ---- 构建产物（体积大、可重建）----
+dist/
+build/
+rust/target/
+*.pyd
+
+# ---- 运行期状态（各机器不同，不入库）----
+# 开发态配置写在项目根：设备 PID / 键位映射 / 档位表
+config.json
+*.log
+*.bak
+*.tmp
+
+# ---- 由 preview.py 生成 ----
+screenshots/
+
+# ---- 源素材 / 设计稿（约定：assets/ 只放运行时会读的文件）----
+mascot_set/
+
+# ---- 本地协作数据 ----
+.workbuddy/
+
+# ---- 系统垃圾 ----
+Thumbs.db
+Desktop.ini
+.DS_Store

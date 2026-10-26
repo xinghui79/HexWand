@@ -1,0 +1,26 @@
+# -*- mode: toml ; coding: utf-8 -*-
+# HexWand 的原生扩展（rust/）用 maturin 构建，不再手搓 .pyd。
+# 构建：在打包环境里 `python -m maturin develop --release`
+#   → 把 hexwand_rust.*.pyd 装进当前 venv 的 site-packages，
+#     随后 PyInstaller 直接从 site-packages 收走，无需手动复制。
+
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "hexwand_rust"
+version = "0.1.0"
+description = "HexWand native extension: report framing + mouse remap hook (Rust/PyO3)"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Rust",
+    "Operating System :: Microsoft :: Windows",
+]
+
+[tool.maturin]
+# 只产出一个顶层扩展模块 hexwand_rust（不打包任何 Python 源码）。
+# manifest-path 指向 rust/Cargo.toml；pyo3 的 extension-module feature 已在那里启用。
+manifest-path = "rust/Cargo.toml"
+module-name = "hexwand_rust"

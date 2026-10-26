@@ -1,0 +1,30 @@
+[package]
+name = "hexwand_rust"
+version = "0.1.0"
+edition = "2021"
+
+# 构建（项目根执行，经 maturin，见根目录 pyproject.toml）：
+#   $env:CARGO_TARGET_DIR = "$env:LOCALAPPDATA\Temp\HexWand_rust_build"  # 别放 OneDrive 里同步
+#   D:\rc_build_venv\Scripts\python.exe -m maturin develop --release
+#     → 产出 hexwand_rust.*.pyd 并装进打包环境的 site-packages，PyInstaller 自动收走
+# 构建期依赖：maturin（装在打包环境 D:\rc_build_venv，不进运行时 requirements）。
+
+[lib]
+name = "hexwand_rust"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.29", features = ["extension-module"] }
+# 原生 HID 后端（src/hid.rs）与钩子（src/remap.rs）用的 Win32 绑定。
+# 加 feature 不会重新下载 crate（生成的绑定都在同一份源码里，feature 只是开关）。
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_System_Threading",
+    "Win32_Storage_FileSystem",              # CreateFileW / FILE_SHARE_* / OPEN_EXISTING
+    "Win32_Security",                        # CreateFileW 的签名带 SECURITY_ATTRIBUTES，
+                                             # 不开这个 feature 该函数根本不会生成
+    "Win32_Devices_HumanInterfaceDevice",    # HidD_* / HidP_GetCaps
+    "Win32_Devices_DeviceAndDriverInstallation",  # SetupDi* 枚举
+] }

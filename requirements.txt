@@ -1,0 +1,27 @@
+# 运行期必需：
+#   pystray —— 系统托盘（hexwand/ui/tray.py）
+#   Pillow  —— 运行期只有托盘图标缩放用（ui/tray.py）；键位页鼠标图是 QPainter
+#              矢量自绘、HUD 看板娘走 QPixmap，都不经过 PIL。make_icon.py
+#              生成图标时另需它一次。
+pystray
+Pillow
+
+# 界面必需：
+#   PyQt6 —— 唯一的 Qt 绑定。hexwand/ui/qt.py 是适配层，UI 包只从那里取 Qt 名字，
+#           所以换绑定只改那一个文件；但**当前只支持 PyQt6**（实测 6.11.0）。
+#           授权提醒：PyQt6 是 GPL / 商业双许可，自用没问题；若将来要闭源对外
+#           分发，应换成 PySide6（LGPL）—— 届时才值得在 qt.py 里重新引入适配分支
+#           （"先试 PySide6、失败回落 PyQt6"那套已按"不留兼容层"删除，因为本机
+#           从未装过 PySide6，那条分支从未被执行）。
+PyQt6
+
+# 不再有可选后端：
+#   原先的 pyhidapi 兜底后端（pip install hid）与手写的 ctypes 原生后端都已
+#   删除，HID 访问只剩 Rust 原生一路（rust/src/hid.rs，随 hexwand_rust 构建）。
+#   hexwand_rust 是**硬依赖**：缺它不仅是连不上鼠标，改键钩子也没有。
+
+# 打包环境额外需要（装进 D:\rc_build_venv，不进本运行时清单）：
+#   maturin  —— 编译 rust/ 为 hexwand_rust 扩展（见根目录 pyproject.toml），
+#              并把 .pyd 装进打包环境，PyInstaller 随后自动收走
+#   PyInstaller —— 单文件打包（build.py 调用）
+# 安装：D:\rc_build_venv\Scripts\python.exe -m pip install maturin PyInstaller
